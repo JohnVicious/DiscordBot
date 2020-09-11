@@ -20,8 +20,12 @@ bot.on('message', msg=>{
 		msg.channel.send('Hello World!');
 	}else if(command === 'website'){
 		msg.channel.send('https://www.johnklein.dev');
+	}else if(command === 'amongus' || command === 'au'){
+		msg.channel.send('https://www.johnklein.dev/AmongUs');
 	}
 
 });
 
-bot.login(token);
+if(token){
+	bot.login(token);
+}
