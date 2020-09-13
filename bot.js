@@ -45,9 +45,62 @@ class Bot{
 
 	}
 	
+	joinChannel()
+	{
+		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Join Channel');
+		
+		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+		
+		if (!channel) return console.error("The channel does not exist!");
+		channel.join().then(connection => {
+			// Yay, it worked!
+			console.log("Successfully joined channel.");
+		}).catch(e => {
+			// Oh no, it errored! Let's log it to console :)
+			console.error(e);
+		});
+		
+	}
+	
+	leaveChannel()
+	{		
+		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Leave Channel');
+		
+		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+		channel.leave();
+	}
+	
 	muteAllUsers()
 	{
 		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
+		
+		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+        for (let member of channel.members) {
+            member[1].voice.setMute(true);
+        }
+	}	
+	
+	unmuteAllUsers()
+	{
+		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
+		
+		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+        for (let member of channel.members) {
+            member[1].voice.setMute(false);
+        }
+	}
+	
+	listUsers()
+	{
+		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('List Users');
+		
+		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+		const users = [];
+        for (let member of channel.members) {
+            users.push({"username":member[1].user.username});
+        }
+		
+		return users;
 	}	
 }
 

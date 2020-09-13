@@ -1,0 +1,64 @@
+
+<div class="row">
+	<div class="col-md-12 medPadBot">
+		<img src="/assets/tabletBG.png" class="position-absolute img-responsive center-block"/>
+		<div class="row tabletArea">
+		
+			<div class="row">
+				<div class="col-md-12 text-center">		
+					<h1 class="heading">AmongUs Voice Channel Controller</h1>
+				</div>
+			</div>
+
+			<div class="row" style="margin-top:1em;">
+				<div class="col-md-12 text-center">
+					<div class="col-md-2 col-md-offset-1">
+						<button id="joinChannel" class="btn btn-primary"><i class="fas fa-door-open"></i> Join Channel</button> 
+					</div>					
+					<div class="col-md-2">
+						<button id="leaveChannel" class="btn btn-warning"><i class="fas fa-door-closed"></i>Leave Channel</button> 
+					</div>					
+					<div class="col-md-2">
+						<button id="unmuteAll" class="btn btn-success"><i class="fas fa-microphone"></i> Unmute All</button> 
+					</div>					
+					<div class="col-md-2">
+						<button id="muteAll" class="btn btn-danger"><i class="fas fa-microphone-slash"></i> Mute All</button> 
+					</div>					
+					<div class="col-md-2">
+						<button id="listUsers" class="btn"><i class="fas fa-user"></i> List Users</button> 
+					</div>					
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-12">
+					<table id="userList" class="hidden">
+						<thead>
+							<tr>
+								<th>Username</th>
+							</tr>
+						</thead>
+						<tbody>
+						
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<style>
+	.heading {
+		font-family: "Comic Sans MS", cursive, sans-serif;
+		color: white;
+	    -webkit-text-stroke: 2px black;
+		font-weight: bold;
+		font-size: 46px;
+	}
+	.tabletArea{
+		padding: 3em 8em 3em 6em;
+	}
+</style>
+<script src="./js/amongUsScript.js"></script>
