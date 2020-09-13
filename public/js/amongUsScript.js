@@ -1,5 +1,14 @@
+var localCheck = (window.location.href).includes('localhost');
+var localSlash = "";
+if(localCheck)
+{
+	localSlash = "/";
+}
+
 document.getElementById('joinChannel').addEventListener('click', function(e) {
-	fetch('/AmongUs/joinChannel', {method: 'POST'})
+	var fetchUrl = localSlash + 'AmongUs/joinChannel';
+	
+	fetch(fetchUrl, {method: 'POST'})
 		.then(function(response) {
 			if(response.ok) {
 				console.log('Joined channel');
@@ -13,7 +22,9 @@ document.getElementById('joinChannel').addEventListener('click', function(e) {
 });
 
 document.getElementById('leaveChannel').addEventListener('click', function(e) {
-	fetch('/AmongUs/leaveChannel', {method: 'POST'})
+	var fetchUrl = localSlash + 'AmongUs/leaveChannel';
+	
+	fetch(fetchUrl, {method: 'POST'})
 		.then(function(response) {
 			if(response.ok) {
 				console.log('Left channel');
@@ -27,7 +38,9 @@ document.getElementById('leaveChannel').addEventListener('click', function(e) {
 });
 
 document.getElementById('muteAll').addEventListener('click', function(e) {
-	fetch('/AmongUs/muteAll', {method: 'POST'})
+	var fetchUrl = localSlash + 'AmongUs/muteAll';
+	
+	fetch(fetchUrl, {method: 'POST'})
 		.then(function(response) {
 			if(response.ok) {
 				console.log('Mute all');
@@ -41,7 +54,9 @@ document.getElementById('muteAll').addEventListener('click', function(e) {
 });
 
 document.getElementById('unmuteAll').addEventListener('click', function(e) {
-	fetch('/AmongUs/unmuteAll', {method: 'POST'})
+	var fetchUrl = localSlash + 'AmongUs/unmuteAll';
+	
+	fetch(fetchUrl, {method: 'POST'})
 		.then(function(response) {
 			if(response.ok) {
 				console.log('Unmute all');
@@ -54,9 +69,10 @@ document.getElementById('unmuteAll').addEventListener('click', function(e) {
 		});
 });
 
-document.getElementById('listUsers').addEventListener('click', function(e) {
+document.getElementById('listUsers').addEventListener('click', function(e) {	
+	var fetchUrl = localSlash + 'AmongUs/listUsers';
 
-	fetch('/AmongUs/listUsers', {method: 'GET'})
+	fetch(fetchUrl, {method: 'GET'})
 		.then(res => res.json())
 		.then((json) => {
 			console.log('List users');
