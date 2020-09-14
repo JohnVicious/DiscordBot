@@ -146,7 +146,7 @@ function checkForUserUpdate()
 			$("#userList").empty();
 			
 			for (let userData of json) {
-				$('#userList').append('<div class="userPanel"><div class="userIcon"><i class="fas fa-user fa-3x"></i></div><div class="userInfo"><span>'+ userData.username+'</span></div>		<div class="userActions"><button class="btn btn-success userMic-btn" data-id="' + userData.id + '"><i class="userMic-active fas fa-microphone"></i><i class="userMic-inactive hidden fas fa-microphone-slash"></i></button></div></div>');
+				$('#userList').append('<div class="userPanel"><div class="userIcon"><i class="fas fa-user fa-3x"></i></div><div class="userInfo"><span>'+ userData.username+'</span></div>		<div class="userActions"><button class="btn ' + (userData.muted ? 'btn-danger' : 'btn-success') + ' userMic-btn" data-id="' + userData.id + '" data-muted="' + userData.muted + '"><i class="userMic-active ' + (userData.muted ? 'hidden' : '') + ' fas fa-microphone"></i><i class="userMic-inactive ' + (userData.muted ? '' : 'hidden') + ' fas fa-microphone-slash"></i></button></div></div>');
 			}
 			
 		})

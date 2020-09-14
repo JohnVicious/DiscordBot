@@ -136,7 +136,11 @@ class Bot{
 		const users = [];
         for (let member of channel.members) {
 			if(!member[1].user.bot){
-				users.push({"username":member[1].user.username,"id":member[1].user.id});
+				users.push({
+					"username":member[1].user.username,
+					"id":member[1].user.id,
+					"muted": member[1].voice.serverMute
+				});
 			}
         }
 		

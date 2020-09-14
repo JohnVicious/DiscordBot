@@ -7,9 +7,9 @@
 			<span>{{this.username}}</span>
 		</div>
 		<div class="userActions">
-			<button class="btn btn-success userMic-btn" data-id="{{this.id}}">
-				<i class="userMic-active fas fa-microphone"></i>
-				<i class="userMic-inactive hidden fas fa-microphone-slash"></i>
+			<button class="btn {{#if this.muted }} btn-danger {{else}} btn-success {{/if}} userMic-btn" data-id="{{this.id}}" data-muted="{{this.muted}}">
+				<i class="userMic-active {{#if this.muted }} hidden {{else}}  {{/if}} fas fa-microphone"></i>
+				<i class="userMic-inactive {{#if this.muted }}  {{else}} hidden {{/if}} fas fa-microphone-slash"></i>
 			</button>
 		</div>
 	</div>
