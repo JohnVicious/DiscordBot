@@ -9,13 +9,25 @@ class Bot{
 		const cmdPrefix = '!';
 		const botMsg = null;
 		this.bot = new Discord.Client();
+		const that = this;
 
 		this.bot.on('ready', ()=>{
 			console.log('Bot is online');
 		});		
 		
 		this.bot.on('message', msg => {			
-			this.basicTextCommands(msg,cmdPrefix);
+			that.basicTextCommands(msg,cmdPrefix);
+		});
+
+
+		//If the channel was joined/left, update user list for AmongUs
+		//Not sure how to dispatch. For now, do a reload on interval in JS. Terrible practice, but I will figure it out.
+		this.bot.on("voiceStateUpdate", function(oldMember, newMember){
+			
+			if(oldMember.channelID == process.env.AMONGUSCHANNEL || newMember.channelID == process.env.AMONGUSCHANNEL){
+					
+			}			
+			
 		});
 
 	}
@@ -75,8 +87,10 @@ class Bot{
 		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
-        for (let member of channel.members) {
-            member[1].voice.setMute(true);
+        for (let member of channel.members) {			
+			if(!member[1].user.bot){
+				member[1].voice.setMute(true);
+			}
         }
 	}	
 	
@@ -85,23 +99,50 @@ class Bot{
 		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+        for (let member of channel.members) {		
+			if(!member[1].user.bot){
+				member[1].voice.setMute(false);
+			}
+        }
+	}
+	
+	muteUser(userID)
+	{
+		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
+		
+		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {
-            member[1].voice.setMute(false);
+			if(member[1].user.id == userID){
+				member[1].voice.setMute(true);
+			}
+        }
+	}	
+	
+	unmuteUser(userID)
+	{
+		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
+		
+		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+        for (let member of channel.members) {
+			if(member[1].user.id == userID){
+				member[1].voice.setMute(false);
+			}
         }
 	}
 	
 	listUsers()
 	{
-		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('List Users');
-		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
 		const users = [];
         for (let member of channel.members) {
-            users.push({"username":member[1].user.username});
+			if(!member[1].user.bot){
+				users.push({"username":member[1].user.username,"id":member[1].user.id});
+			}
         }
 		
 		return users;
 	}	
+	
 }
 
 module.exports = Bot;

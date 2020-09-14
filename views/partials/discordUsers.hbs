@@ -1,0 +1,16 @@
+{{#each discordUsers}}
+	<div class="userPanel">
+		<div class="userIcon">
+			<i class="fas fa-user fa-3x"></i>
+		</div>
+		<div class="userInfo">
+			<span>{{this.username}}</span>
+		</div>
+		<div class="userActions">
+			<button class="btn btn-success userMic-btn" data-id="{{this.id}}">
+				<i class="userMic-active fas fa-microphone"></i>
+				<i class="userMic-inactive hidden fas fa-microphone-slash"></i>
+			</button>
+		</div>
+	</div>
+{{/each}}

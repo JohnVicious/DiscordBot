@@ -6,7 +6,8 @@ if(localCheck)
 }
 
 document.getElementById('joinChannel').addEventListener('click', function(e) {
-	var fetchUrl = localSlash + 'AmongUs/joinChannel';
+	var command = 'joinChannel';
+	var fetchUrl = localSlash + 'AmongUs/' + command;
 	
 	fetch(fetchUrl, {method: 'POST'})
 		.then(function(response) {
@@ -22,7 +23,8 @@ document.getElementById('joinChannel').addEventListener('click', function(e) {
 });
 
 document.getElementById('leaveChannel').addEventListener('click', function(e) {
-	var fetchUrl = localSlash + 'AmongUs/leaveChannel';
+	var command = 'leaveChannel';
+	var fetchUrl = localSlash + 'AmongUs/' + command;
 	
 	fetch(fetchUrl, {method: 'POST'})
 		.then(function(response) {
@@ -38,7 +40,8 @@ document.getElementById('leaveChannel').addEventListener('click', function(e) {
 });
 
 document.getElementById('muteAll').addEventListener('click', function(e) {
-	var fetchUrl = localSlash + 'AmongUs/muteAll';
+	var command = 'muteAll';
+	var fetchUrl = localSlash + 'AmongUs/' + command;
 	
 	fetch(fetchUrl, {method: 'POST'})
 		.then(function(response) {
@@ -54,7 +57,8 @@ document.getElementById('muteAll').addEventListener('click', function(e) {
 });
 
 document.getElementById('unmuteAll').addEventListener('click', function(e) {
-	var fetchUrl = localSlash + 'AmongUs/unmuteAll';
+	var command = 'unmuteAll';
+	var fetchUrl = localSlash + 'AmongUs/' + command;
 	
 	fetch(fetchUrl, {method: 'POST'})
 		.then(function(response) {
@@ -69,22 +73,84 @@ document.getElementById('unmuteAll').addEventListener('click', function(e) {
 		});
 });
 
-document.getElementById('listUsers').addEventListener('click', function(e) {	
-	var fetchUrl = localSlash + 'AmongUs/listUsers';
+document.getElementById('listUsers').addEventListener('click', function(e) {
+	checkForUserUpdate();
+});
+
+$('.userMic-btn').on('click', function(){
+	var isMuted = false;
+	var btn = $(this);
+	btn.children().each(function () {
+		for(let itemClass of this.classList){
+			if(itemClass == "hidden"){
+				if($(this).hasClass('userMic-inactive')){
+					isMuted = true;
+				}
+			}
+		}
+		
+		$(this).toggleClass("hidden");
+	});
+	
+	//If isMuted is true, we need to mute user
+	if(isMuted){
+		btn.removeClass('btn-success');
+		btn.addClass('btn-danger');
+	}else{
+		btn.addClass('btn-success');
+		btn.removeClass('btn-danger');
+	}
+	
+	if(isMuted){
+		var command = 'muteUser';
+	}else{
+		var command = 'unmuteUser';
+	}
+	var fetchUrl = localSlash + 'AmongUs/' + command;
+	
+	fetch(fetchUrl, 
+		{
+			method: 'POST', 
+			headers: {
+			  'Accept': 'application/json',
+			  'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({id:btn.data('id')})
+		})
+		.then(function(response) {
+			if(response.ok) {
+				console.log('Unmute all');
+				return;
+			}
+			throw new Error('Request failed.');
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+});
+
+setInterval(
+	function(){
+		checkForUserUpdate();
+	},5000);
+
+function checkForUserUpdate()
+{
+	var command = 'listUsers';	
+	var fetchUrl = localSlash + 'AmongUs/' + command;
 
 	fetch(fetchUrl, {method: 'GET'})
 		.then(res => res.json())
 		.then((json) => {
-			console.log('List users');
 			
-			$('#userList').removeClass('hidden');
+			$("#userList").empty();
 			
 			for (let userData of json) {
-				$('#userList > tbody:last-child').append('<tr><td>',userData.username,'</td></tr>');
+				$('#userList').append('<div class="userPanel"><div class="userIcon"><i class="fas fa-user fa-3x"></i></div><div class="userInfo"><span>'+ userData.username+'</span></div>		<div class="userActions"><button class="btn btn-success userMic-btn" data-id="' + userData.id + '"><i class="userMic-active fas fa-microphone"></i><i class="userMic-inactive hidden fas fa-microphone-slash"></i></button></div></div>');
 			}
 			
 		})
 		.catch(function(error) {
 			console.log(error);
 		});
-});
+}

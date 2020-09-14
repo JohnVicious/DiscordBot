@@ -8,40 +8,36 @@
 				<div class="col-md-12 text-center">		
 					<h1 class="heading">AmongUs Voice Channel Controller</h1>
 				</div>
+			</div>			
+			
+			<div class="row" style="">
+				<div class="col-md-12 text-center">				
+					<hr class="line"/>			
+					<h1 class="subHeading">Channel Controls</h1>
+				</div>
 			</div>
 
-			<div class="row" style="margin-top:1em;">
-				<div class="col-md-12 text-center">
-					<div class="col-md-2 col-md-offset-1">
-						<button id="joinChannel" class="btn btn-primary"><i class="fas fa-door-open"></i> Join Channel</button> 
-					</div>					
-					<div class="col-md-2">
-						<button id="leaveChannel" class="btn btn-warning"><i class="fas fa-door-closed"></i>Leave Channel</button> 
-					</div>					
-					<div class="col-md-2">
-						<button id="unmuteAll" class="btn btn-success"><i class="fas fa-microphone"></i> Unmute All</button> 
-					</div>					
-					<div class="col-md-2">
-						<button id="muteAll" class="btn btn-danger"><i class="fas fa-microphone-slash"></i> Mute All</button> 
-					</div>					
-					<div class="col-md-2">
-						<button id="listUsers" class="btn"><i class="fas fa-user"></i> List Users</button> 
-					</div>					
+			<div class="row" style="margin-top:0.25em;">
+				<div class="col-md-12 text-center flex buttonRowSpacing">
+					<button id="joinChannel" class="btn btn-primary"><i class="fas fa-door-open"></i> Join Channel</button> 
+					<button id="leaveChannel" class="btn btn-warning"><i class="fas fa-door-closed"></i>Leave Channel</button> 
+					<button id="unmuteAll" class="btn btn-success"><i class="fas fa-microphone"></i> Unmute All</button> 
+					<button id="muteAll" class="btn btn-danger"><i class="fas fa-microphone-slash"></i> Mute All</button> 
+					<button id="listUsers" class="btn hidden"><i class="fas fa-user"></i> Refresh Users</button> 
 				</div>
 			</div>
 			
-			<div class="row">
+			<div class="row" style="">
+				<div class="col-md-12 text-center">					
+					<hr class="line"/>
+				</div>
+			</div>
+			
+			<div class="row" style="margin-top:2em;">
 				<div class="col-md-12">
-					<table id="userList" class="hidden">
-						<thead>
-							<tr>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-						
-						</tbody>
-					</table>
+					<div id="userList">
+						{{> discordUsers discordUsers=discordUsers}}
+					</div>
 				</div>
 			</div>
 			
@@ -49,16 +45,6 @@
 	</div>
 </div>
 
-<style>
-	.heading {
-		font-family: "Comic Sans MS", cursive, sans-serif;
-		color: white;
-	    -webkit-text-stroke: 2px black;
-		font-weight: bold;
-		font-size: 46px;
-	}
-	.tabletArea{
-		padding: 3em 8em 3em 6em;
-	}
-</style>
+<!--Page specific coding-->
+<link rel="stylesheet" href="./css/amongUsStyle.css">
 <script src="./js/amongUsScript.js"></script>
