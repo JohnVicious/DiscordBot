@@ -77,7 +77,8 @@ document.getElementById('listUsers').addEventListener('click', function(e) {
 	checkForUserUpdate();
 });
 
-$('.userMic-btn').on('click', function(){
+$(document).on('click', '.userMic-btn', function(){
+	
 	var isMuted = false;
 	var btn = $(this);
 	btn.children().each(function () {
