@@ -1,11 +1,12 @@
-const url = 'ws://localhost:8080';
+const url = 'ws://localhost:6969';
 const connection = new WebSocket(url);
   
 connection.onmessage = (e) => {
-	if(e.data == "member_actively"){
+	if(e.data == "member_activity"){
 		checkForUserUpdate();
 	}
 }
+
 
 var localCheck = (window.location.href).includes('localhost');
 var localSlash = "";
