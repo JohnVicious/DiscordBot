@@ -10,6 +10,23 @@ class Bot{
 		const botMsg = null;
 		this.bot = new Discord.Client();
 		const that = this;
+		
+		const WebSocket = require('ws')
+ 
+		const wss = new WebSocket.Server({ port: 8080 })
+		 
+		wss.on('connection', ws => {		
+			//If the channel was joined/left, update user list for AmongUs		
+			//Not sure how to dispatch. For now, do a reload on interval in JS. Terrible practice, but I will figure it out.
+			that.bot.on("voiceStateUpdate", function(oldMember, newMember){
+			
+				if(oldMember.channelID == process.env.AMONGUSCHANNEL || newMember.channelID == process.env.AMONGUSCHANNEL){
+					ws.send('member_actively');		
+				}
+			
+			});
+		})
+		
 
 		this.bot.on('ready', ()=>{
 			console.log('Bot is online');
@@ -20,15 +37,7 @@ class Bot{
 		});
 
 
-		//If the channel was joined/left, update user list for AmongUs
-		//Not sure how to dispatch. For now, do a reload on interval in JS. Terrible practice, but I will figure it out.
-		this.bot.on("voiceStateUpdate", function(oldMember, newMember){
-			
-			if(oldMember.channelID == process.env.AMONGUSCHANNEL || newMember.channelID == process.env.AMONGUSCHANNEL){
-					
-			}			
-			
-		});
+
 
 	}
 	

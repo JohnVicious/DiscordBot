@@ -1,3 +1,12 @@
+const url = 'ws://localhost:8080';
+const connection = new WebSocket(url);
+  
+connection.onmessage = (e) => {
+	if(e.data == "member_actively"){
+		checkForUserUpdate();
+	}
+}
+
 var localCheck = (window.location.href).includes('localhost');
 var localSlash = "";
 if(localCheck)
@@ -129,11 +138,6 @@ $(document).on('click', '.userMic-btn', function(){
 			console.log(error);
 		});
 });
-
-setInterval(
-	function(){
-		checkForUserUpdate();
-	},5000);
 
 function checkForUserUpdate()
 {
