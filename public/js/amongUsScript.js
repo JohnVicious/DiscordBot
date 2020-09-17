@@ -1,5 +1,16 @@
-const url = 'ws://localhost:6969';
-const connection = new WebSocket(url);
+
+
+
+var localCheck = (window.location.href).includes('localhost');
+var localSlash = "";
+var wsConnectionURL = "wss://johnklein.dev/websocket";
+if(localCheck)
+{
+	localSlash = "/";
+	wsConnectionURL = "ws://localhost:6969"
+}
+
+const connection = new WebSocket(wsConnectionURL);
   
 connection.onmessage = (e) => {
 	if(e.data == "member_activity"){
@@ -7,13 +18,6 @@ connection.onmessage = (e) => {
 	}
 }
 
-
-var localCheck = (window.location.href).includes('localhost');
-var localSlash = "";
-if(localCheck)
-{
-	localSlash = "/";
-}
 
 document.getElementById('joinChannel').addEventListener('click', function(e) {
 	var command = 'joinChannel';
