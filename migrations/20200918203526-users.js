@@ -23,8 +23,8 @@ exports.up = function(db) {
 			autoIncrement: true,
 			length: 10  
 		},
-		login: {
-			type: 'int',
+		username: {
+			type: 'string',
 			notNull: true
 		},
 		password: {

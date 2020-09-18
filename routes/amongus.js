@@ -7,8 +7,15 @@ router.get('/', function(req, res, next) {
 	const bot = req.app.get('bot');
 	var users = bot.listUsers();
 		
+	var username = false;
+	
+	if(req.session.username){
+		username = req.session.username;
+	}	
+		
 	res.render('amongUs', {
-		discordUsers : users
+		discordUsers : users,
+		name: username
 	});	
 	
 });

@@ -57,13 +57,15 @@ var sessionStore = new MySQLStore(options);
 
 //Use our session
 app.use(session({
+	name: 'discordBot_sessionid',
     key: 'session_cookie_name',
     secret: 'session_cookie_secret',
     store: sessionStore,
     cookie: {
-		secure: true, 
+		secure: (process.env.DB_DATABASE === 'true' ? true : false), 
 		maxAge: null, 
-		httpOnly: false
+		httpOnly: false,
+		sameSite: (process.env.DB_DATABASE === 'true' ? true : false)
 	},
     resave: false,
     saveUninitialized: false
@@ -82,8 +84,8 @@ app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 //Create our routes
 var indexRouter = require('./routes/index');
 app.use('/', indexRouter);
-var commandRouter = require('./routes/commands');
-app.use('/AmongUs', commandRouter);
+var amongUsRouter = require('./routes/amongus');
+app.use('/AmongUs', amongUsRouter);
 
 
 // catch 404 and forward to error handler
