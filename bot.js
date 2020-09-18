@@ -5,20 +5,19 @@ class Bot{
 	constructor()
 	{
 		const Discord = require('discord.js');
-		this.token = process.env.TOKEN;
 		const cmdPrefix = '!';
 		const botMsg = null;
-		this.bot = new Discord.Client();
-		const that = this;
 		
-		const WebSocket = require('ws')
- 
+		this.token = process.env.TOKEN;
+		this.bot = new Discord.Client();
+		
+		const that = this;		
+		const WebSocket = require('ws') 
 		const wss = new WebSocket.Server({ port: 6969 })
 		 
 		wss.on('connection', ws => {		
 		
 			//If the channel was joined/left, update user list for AmongUs		
-			//Not sure how to dispatch. For now, do a reload on interval in JS. Terrible practice, but I will figure it out.
 			that.bot.on("voiceStateUpdate", function(oldMember, newMember){
 			
 				if(oldMember.channelID == process.env.AMONGUSCHANNEL || newMember.channelID == process.env.AMONGUSCHANNEL){
@@ -26,8 +25,7 @@ class Bot{
 				}
 			
 			});
-		})
-		
+		})		
 
 		this.bot.on('ready', ()=>{
 			console.log('Bot is online');
@@ -36,9 +34,6 @@ class Bot{
 		this.bot.on('message', msg => {			
 			that.basicTextCommands(msg,cmdPrefix);
 		});
-
-
-
 
 	}
 	
@@ -69,7 +64,7 @@ class Bot{
 	
 	joinChannel()
 	{
-		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Join Channel');
+		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Join Channel');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
 		
@@ -86,7 +81,7 @@ class Bot{
 	
 	leaveChannel()
 	{		
-		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Leave Channel');
+		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Leave Channel');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
 		channel.leave();
@@ -94,7 +89,7 @@ class Bot{
 	
 	muteAllUsers()
 	{
-		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
+		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {			
@@ -106,7 +101,7 @@ class Bot{
 	
 	unmuteAllUsers()
 	{
-		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
+		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {		
@@ -118,7 +113,7 @@ class Bot{
 	
 	muteUser(userID)
 	{
-		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
+		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {
@@ -130,7 +125,7 @@ class Bot{
 	
 	unmuteUser(userID)
 	{
-		this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
+		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {

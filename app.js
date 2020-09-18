@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -7,39 +9,27 @@ var hbs = require('express-handlebars');
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 
-require('dotenv').config();
 
-var options = {
-    host: process.env.DB_HOST,
-    port: 3306,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
-};
-
-var sessionStore = new MySQLStore(options); 
-
-var sessionParser = session({
-    store: sessionStore,
-    cookie: {secure: true, maxAge: null, httpOnly: false}
-});
-
-
+//Declare bot and login
 var discordBot = require('./bot.js');
 var bot = new discordBot();
 bot.login();
 
-var indexRouter = require('./routes/index');
-var commandRouter = require('./routes/commands');
 
+//Declare app
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-app.set('bot', bot);
-app.set('sessionParser', sessionParser);
 
+
+//Set our bot
+app.set('bot', bot);
+
+
+//Configuring handlebars
 app.engine('hbs', hbs({
 	extname: 'hbs', 
     defaultLayout: 'layout', 
@@ -50,14 +40,33 @@ app.engine('hbs', hbs({
     ]
 }));
 
+
+//Database options
+var options = {
+    host: process.env.DB_HOST,
+    port: 3306,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
+};
+
+
+//Creating session store
+var sessionStore = new MySQLStore(options); 
+
+
+//Use our session
 app.use(session({
     key: 'session_cookie_name',
     secret: 'session_cookie_secret',
     store: sessionStore,
+    cookie: {secure: true, maxAge: null, httpOnly: false},
     resave: false,
     saveUninitialized: false
 }));
-app.use(sessionParser);
+
+
+//Use
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -65,13 +74,19 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 
+
+//Create our routes
+var indexRouter = require('./routes/index');
 app.use('/', indexRouter);
+var commandRouter = require('./routes/commands');
 app.use('/AmongUs', commandRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
