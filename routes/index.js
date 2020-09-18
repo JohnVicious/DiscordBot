@@ -3,7 +3,10 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.render('index', { title: 'Express' });
+	var today = new Date();
+	var date = today.getFullYear();
+	
+	res.render('index', { title: 'Express', currentDate: date });
 });
 
 module.exports = router;

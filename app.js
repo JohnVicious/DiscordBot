@@ -44,7 +44,7 @@ app.engine('hbs', hbs({
 //Database options
 var options = {
     host: process.env.DB_HOST,
-    port: 3306,
+    port: process.env.DB_PORT,
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE
@@ -60,7 +60,11 @@ app.use(session({
     key: 'session_cookie_name',
     secret: 'session_cookie_secret',
     store: sessionStore,
-    cookie: {secure: true, maxAge: null, httpOnly: false},
+    cookie: {
+		secure: true, 
+		maxAge: null, 
+		httpOnly: false
+	},
     resave: false,
     saveUninitialized: false
 }));
