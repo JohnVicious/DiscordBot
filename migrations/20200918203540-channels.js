@@ -39,9 +39,21 @@ exports.up = function(db) {
 				}
 			}
 		},
-		channelid: {
+		channeltypeid: {
 			type: 'int',
-			notNull: true
+			notNull: true,
+			unsigned: true,
+			foreignKey: {
+				name: 'channels_channeltypeid_id_fk',
+				table: 'channeltypes',
+				rules: {
+				  onDelete: 'RESTRICT',
+				  onUpdate: 'RESTRICT'
+				},
+				mapping: {
+					serverid: 'id'
+				}
+			}
 		},
 		created: {
 			type: 'datetime',
