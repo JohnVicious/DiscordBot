@@ -1,13 +1,66 @@
 <!DOCTYPE html>
 <html land="eng">
+	<script>
+		
+		var localCheck = (window.location.href).includes('localhost');
+		var rootCheck = (window.location.href).includes('DiscordBot/');
+		
+		var pageStyles = [
+			[
+				'css',
+				'bootstrap.css'
+			],
+			[
+				'css',
+				'all.min.css'
+			],
+			[
+				'css',
+				'style.css'
+			],
+			[
+				'jquery',
+				'jquery.js'
+			],
+			[
+				'js',
+				'bootstrap.js'
+			],
+			[
+				'js',
+				'main.js'
+			]
+		];
+		
+		for (let ps of pageStyles){
+			if(ps[0] === 'css'){
+				
+				if(localCheck || rootcheck){
+					var link = '<link rel="stylesheet" href="./css/' + ps[1] + '" />';
+				}else{
+					var link = '<link rel="stylesheet" href="./DiscordBot/css/' + ps[1] + '" />';					
+				}
+				document.write( link );	
+			}else{				
+				
+				if(localCheck || rootcheck){
+					var src = './' + ps[0] + '/' + ps[1];					
+				}else{			
+					var src = './DiscordBot/' + ps[0] + '/' + ps[1];
+				}		
+				var s = document.createElement( 'script' );
+				s.setAttribute( 'src', src );		
+				
+				document.body.appendChild( s );
+			}
+						
+		}
+		
+		
+	</script>
 	<head>
 		<title>{{ title }}</title>
-		<link rel="stylesheet" href="./css/bootstrap.css">
-		<link rel="stylesheet" href="./css/all.min.css">
-		<link rel='stylesheet' href='./css/style.css' />
-		<script src="./jquery/jquery.js"></script>
-		<script src="./js/bootstrap.js"></script>
-		<script src="./js/main.js"></script>
+		
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse navbar-fixed-top">

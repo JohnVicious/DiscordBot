@@ -5,13 +5,14 @@ var session = require('express-session');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {	
+	
 	var username = false;
 	
 	if(req.session.username){
 		username = req.session.username;
 	}
 	
-	res.render('index', { title: 'Express', name: username });
+	res.render('index', { title: 'Discord Bot', name: username });
 });
 
 router.get('/login', function(req, res, next) {
