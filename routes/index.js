@@ -3,9 +3,11 @@ var router = express.Router();
 var mysql = require('mysql');
 var session = require('express-session');
 var prod = process.env.PRODUCTION === 'true' ? true : false;
-var loc = '.';
+var assetLoc = '.';
+var postLoc = '';
 if(prod){
-	loc = '/DiscordBot';
+	assetLoc = '/DiscordBot';
+    postLoc = '/DiscordBot';
 }
 
 
@@ -18,20 +20,20 @@ router.get('/', function(req, res, next) {
 		username = req.session.username;
 	}
 	
-	res.render('index', { title: 'Discord Bot', name: username, production: loc });
+	res.render('index', { title: 'Discord Bot', name: username, production: assetLoc });
 });
 
 router.get('/login', function(req, res, next) {
 	
-	res.render('login', { title: 'Login', production: loc });
+	res.render('login', { title: 'Login', production: assetLoc });
 });
 
 router.get('/register', function(req, res, next) {
 	
-	res.render('register', { title: 'Register', production: loc });
+	res.render('register', { title: 'Register', production: assetLoc });
 });
 
-router.post('/login', function(req,res,next) {
+router.post(postLoc + '/login', function(req,res,next) {
 	var dboptions = {
 		host: process.env.DB_HOST,
 		port: process.env.DB_PORT,
@@ -63,7 +65,7 @@ router.post('/login', function(req,res,next) {
 });
 
 
-router.get('/logout', function(req,res,next) {
+router.get(postLoc + '/logout', function(req,res,next) {
 	req.session.destroy(err => {
 		if(err){
 			return res.redirect('/');

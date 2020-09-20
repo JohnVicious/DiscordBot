@@ -14,15 +14,15 @@ router.get('/', function(req, res, next) {
 	}	
 		
 	var prod = process.env.PRODUCTION == 'true' ? true : false;
-	var loc = '.';
+	var assetLoc = '.';
 	if(prod){
-		loc = '/DiscordBot';
+		assetLoc = '/DiscordBot';
 	}	
 		
 	res.render('amongUs', {
 		discordUsers : users,
 		name: username,
-		production: loc
+		production: assetLoc
 	});	
 	
 });
