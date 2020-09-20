@@ -12,7 +12,13 @@ router.get('/', function(req, res, next) {
 		username = req.session.username;
 	}
 	
-	res.render('index', { title: 'Discord Bot', name: username });
+	var prod = process.env.PRODUCTION === 'true' ? true : false;
+	var loc = '.';
+	if(prod){
+		loc = '/DiscordBot';
+	}
+	
+	res.render('index', { title: 'Discord Bot', name: username, production: loc });
 });
 
 router.get('/login', function(req, res, next) {
