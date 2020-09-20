@@ -2,8 +2,8 @@
 <html land="eng">
 	<script>
 		
-		var localCheck = (window.location.href).includes('localhost');
-		var rootCheck = (window.location.href).includes('DiscordBot/');
+		const localCheck = (window.location.href).includes('localhost');
+		const rootCheck = (window.location.href).includes('DiscordBot/');
 		
 		var pageStyles = [
 			[
@@ -35,7 +35,7 @@
 		for (let ps of pageStyles){
 			if(ps[0] === 'css'){
 				
-				if(localCheck || rootcheck){
+				if(localCheck || rootCheck){
 					var link = '<link rel="stylesheet" href="./css/' + ps[1] + '" />';
 				}else{
 					var link = '<link rel="stylesheet" href="./DiscordBot/css/' + ps[1] + '" />';					
@@ -43,7 +43,7 @@
 				document.write( link );	
 			}else{				
 				
-				if(localCheck || rootcheck){
+				if(localCheck || rootCheck){
 					var src = './' + ps[0] + '/' + ps[1];					
 				}else{			
 					var src = './DiscordBot/' + ps[0] + '/' + ps[1];
