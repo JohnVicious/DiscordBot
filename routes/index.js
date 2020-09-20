@@ -33,7 +33,7 @@ router.get('/register', function(req, res, next) {
 	res.render('register', { title: 'Register', production: assetLoc });
 });
 
-router.post(postLoc + '/login', function(req,res,next) {
+router.post('/login', function(req,res,next) {
 	var dboptions = {
 		host: process.env.DB_HOST,
 		port: process.env.DB_PORT,
@@ -65,7 +65,7 @@ router.post(postLoc + '/login', function(req,res,next) {
 });
 
 
-router.get(postLoc + '/logout', function(req,res,next) {
+router.get('/logout', function(req,res,next) {
 	req.session.destroy(err => {
 		if(err){
 			return res.redirect('/');
