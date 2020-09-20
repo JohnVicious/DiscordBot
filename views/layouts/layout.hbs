@@ -40,7 +40,6 @@
 				}else{
 					var link = '<link rel="stylesheet" href="./DiscordBot/css/' + ps[1] + '" />';					
 				}
-				document.write( link );	
 			}else{				
 				
 				if(localCheck || rootCheck){
@@ -48,12 +47,10 @@
 				}else{			
 					var src = './DiscordBot/' + ps[0] + '/' + ps[1];
 				}		
-				var s = document.createElement( 'script' );
-				s.setAttribute( 'src', src );		
-				
-				document.body.appendChild( s );
+				var link = document.createElement( 'script' );
+				link.setAttribute( 'src', src );		
 			}
-						
+			document.write( link );							
 		}
 		
 		

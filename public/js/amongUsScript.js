@@ -1,5 +1,4 @@
 
-var localCheck = (window.location.href).includes('localhost');
 var localSlash = "";
 var wsConnectionURL = "wss://johnklein.dev/websocket";
 if(localCheck)
