@@ -2,6 +2,12 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var session = require('express-session');
+var prod = process.env.PRODUCTION === 'true' ? true : false;
+var loc = '.';
+if(prod){
+	loc = '/DiscordBot';
+}
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {	
@@ -12,23 +18,17 @@ router.get('/', function(req, res, next) {
 		username = req.session.username;
 	}
 	
-	var prod = process.env.PRODUCTION == 'true' ? true : false;
-	var loc = '.';
-	if(prod){
-		loc = '/DiscordBot';
-	}
-	
 	res.render('index', { title: 'Discord Bot', name: username, production: loc });
 });
 
 router.get('/login', function(req, res, next) {
 	
-	res.render('login', { title: 'Login' });
+	res.render('login', { title: 'Login', production: loc });
 });
 
 router.get('/register', function(req, res, next) {
 	
-	res.render('register', { title: 'Register' });
+	res.render('register', { title: 'Register', production: loc });
 });
 
 router.post('/login', function(req,res,next) {
