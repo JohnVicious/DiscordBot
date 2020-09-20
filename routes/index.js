@@ -12,9 +12,9 @@ router.get('/', function(req, res, next) {
 		username = req.session.username;
 	}
 	
-	var prod = process.env.PRODUCTION === 'true' ? true : false;
+	var prod = process.env.PRODUCTION == 'true' ? true : false;
 	var loc = '.';
-	if(prod){
+	if(!prod){
 		loc = '/DiscordBot';
 	}
 	
