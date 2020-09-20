@@ -13,9 +13,16 @@ router.get('/', function(req, res, next) {
 		username = req.session.username;
 	}	
 		
+	var prod = process.env.PRODUCTION == 'true' ? true : false;
+	var loc = '.';
+	if(prod){
+		loc = '/DiscordBot';
+	}	
+		
 	res.render('amongUs', {
 		discordUsers : users,
-		name: username
+		name: username,
+		production: loc
 	});	
 	
 });

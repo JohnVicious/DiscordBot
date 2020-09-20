@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 	
 	var prod = process.env.PRODUCTION == 'true' ? true : false;
 	var loc = '.';
-	if(!prod){
+	if(prod){
 		loc = '/DiscordBot';
 	}
 	
