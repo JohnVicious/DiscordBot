@@ -27,12 +27,12 @@ router.get('/', function(req, res, next) {
 
 router.get('/login', function(req, res, next) {
 	
-	res.render('login', { title: 'Login', production: postLoc });
+	res.render('login', { title: 'Login', production: assetLoc, postLocation: postLoc });
 });
 
 router.get('/register', function(req, res, next) {
 	
-	res.render('register', { title: 'Register', production: postLoc });
+	res.render('register', { title: 'Register', production: assetLoc, postLocation: postLoc});
 });
 
 router.post('/login', function(req,res,next) {
