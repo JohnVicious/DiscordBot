@@ -4,10 +4,12 @@ var mysql = require('mysql');
 var session = require('express-session');
 var prod = process.env.PRODUCTION === 'true' ? true : false;
 var assetLoc = '.';
-var postLoc = '';
+var postLoc = '/';
+var redirectLoc = '/';
 if(prod){
 	assetLoc = '/DiscordBot';
-    postLoc = '/DiscordBot';
+    postLoc = '';
+    redirectLoc = '/DiscordBot';
 }
 
 
@@ -25,12 +27,12 @@ router.get('/', function(req, res, next) {
 
 router.get('/login', function(req, res, next) {
 	
-	res.render('login', { title: 'Login', production: assetLoc });
+	res.render('login', { title: 'Login', production: postLoc });
 });
 
 router.get('/register', function(req, res, next) {
 	
-	res.render('register', { title: 'Register', production: assetLoc });
+	res.render('register', { title: 'Register', production: postLoc });
 });
 
 router.post('/login', function(req,res,next) {
@@ -51,7 +53,7 @@ router.post('/login', function(req,res,next) {
 				req.session.loggedin = true;
 				req.session.email = email;
 				req.session.username = results[0].username;
-				return res.redirect('/');
+				return res.redirect(redirectLoc);
 			} else {
 				res.send('Incorrect Email and/or Password!');
 			}			
@@ -68,11 +70,11 @@ router.post('/login', function(req,res,next) {
 router.get('/logout', function(req,res,next) {
 	req.session.destroy(err => {
 		if(err){
-			return res.redirect('/');
+			return res.redirect(redirectLoc);
 		}
 		
 		res.clearCookie('discordBot_sessionid');
-		res.redirect('/');
+		res.redirect(redirectLoc);
 	});
 });
 
