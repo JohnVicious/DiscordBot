@@ -22,7 +22,10 @@ router.get('/', function(req, res, next) {
 	res.render('amongUs', {
 		discordUsers : users,
 		name: username,
-		production: assetLoc
+		production: assetLoc,
+		active: {
+			AmongUs: true
+		}
 	});	
 	
 });

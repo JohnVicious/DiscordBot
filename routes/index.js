@@ -22,17 +22,38 @@ router.get('/', function(req, res, next) {
 		username = req.session.username;
 	}
 	
-	res.render('index', { title: 'Discord Bot', name: username, production: assetLoc });
+	res.render('index', { 
+		title: 'Discord Bot', 
+		name: username, 
+		production: assetLoc, 
+		active: {
+			Home: true
+		} 
+	});
 });
 
 router.get('/login', function(req, res, next) {
 	
-	res.render('login', { title: 'Login', production: assetLoc, postLocation: postLoc });
+	res.render('login', { 
+		title: 'Login',
+		production: assetLoc, 
+		postLocation: postLoc,
+		active: {
+			Login: true
+		}
+	});
 });
 
 router.get('/register', function(req, res, next) {
 	
-	res.render('register', { title: 'Register', production: assetLoc, postLocation: postLoc});
+	res.render('register', { 
+		title: 'Register', 
+		production: assetLoc, 
+		postLocation: postLoc,
+		active: {
+			Register: true
+		}
+	});
 });
 
 router.post('/login', function(req,res,next) {
