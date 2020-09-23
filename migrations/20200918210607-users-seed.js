@@ -17,7 +17,7 @@ exports.setup = function(options, seedLink) {
 exports.up = function(db) {
 	return db.insert('users',{
 		username: 'TestVicious',
-		password: 'test',
+		password: '$2b$10$x8wSs/TQUBlinoO0vBlpIuGmJ8l0bpmWUuz.kPhT6GJxw8ZAY05sG',
 		email: 'test@test.com',
 		created: '2020-09-18 00:00:00',
 		lastlogin: '2020-09-18 00:00:01',

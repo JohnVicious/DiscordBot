@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var session = require('express-session');
+const bcrypt = require('bcrypt');
+const saltRounds = process.env.SALTROUNDS;
+
 var prod = process.env.PRODUCTION === 'true' ? true : false;
 var assetLoc = '.';
 var postLoc = '/';
@@ -14,7 +17,7 @@ if(prod){
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {	
+router.get('/', function(req, res, next) {		
 	
 	var username = false;
 	
@@ -45,7 +48,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/register', function(req, res, next) {
-	
+
 	res.render('register', { 
 		title: 'Register', 
 		production: assetLoc, 
@@ -69,21 +72,39 @@ router.post('/login', function(req,res,next) {
 	var email = req.body.email;
 	var password = req.body.password;
 	if (email && password) {
-		connection.query('SELECT email, username FROM users WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
-			if (results.length > 0) {
-				req.session.loggedin = true;
-				req.session.email = email;
-				req.session.username = results[0].username;
-				return res.redirect(redirectLoc);
+		
+		connection.query('SELECT email, username, password FROM users WHERE email = ?', [email], function(error, results, fields) {
+			if (results.length > 0) {				
+				var passed = false;
+				bcrypt.compare(password, results[0].password).then(function (result) {
+					
+					if(result){
+						req.session.loggedin = true;
+						req.session.email = email;
+						req.session.username = results[0].username;
+						return res.redirect(redirectLoc);
+					}else{
+						res.send('Incorrect Email and/or Password!');	
+						res.end();					
+					}
+				});
+				
 			} else {
 				res.send('Incorrect Email and/or Password!');
+				res.end();
 			}			
-			res.end();
 		});
 	} else {
 		res.send('Please enter Email and Password!');
 		res.end();
 	}
+	
+});
+
+router.post('/register', function(req,res,next) {
+		// bcrypt.hash('test', saltRounds, function(err,hash){
+		// console.log(hash);
+	// });
 	
 });
 
