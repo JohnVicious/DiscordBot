@@ -132,7 +132,7 @@ $(document).on('click', '.userMic-btn', function(){
 		})
 		.then(function(response) {
 			if(response.ok) {
-				console.log('Unmute all');
+				console.log('Mute status');
 				return;
 			}
 			throw new Error('Request failed.');
@@ -140,6 +140,60 @@ $(document).on('click', '.userMic-btn', function(){
 		.catch(function(error) {
 			console.log(error);
 		});
+});
+
+$(document).on('click', '.userAlive-btn', function(){
+	
+	var isAlive = false;
+	var btn = $(this);
+	btn.children().each(function () {
+		for(let itemClass of this.classList){
+			if(itemClass == "hidden"){
+				if($(this).hasClass('userAlive-inactive')){
+					isAlive = true;
+				}
+			}
+		}
+		
+		$(this).toggleClass("hidden");
+	});
+	
+	//If isAlive is true, we need to mark user as alive
+	if(isAlive){
+		btn.removeClass('btn-success');
+		btn.addClass('btn-danger');
+	}else{
+		btn.addClass('btn-success');
+		btn.removeClass('btn-danger');
+	}
+	
+	if(isAlive){
+		var command = 'markDeadUser';
+	}else{
+		var command = 'markAliveUser';
+	}
+	var fetchUrl = localSlash + 'AmongUs/' + command;
+	
+	fetch(fetchUrl, 
+		{
+			method: 'POST', 
+			headers: {
+			  'Accept': 'application/json',
+			  'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({id:btn.data('id')})
+		})
+		.then(function(response) {
+			if(response.ok) {
+				console.log('Alive status');
+				return;
+			}
+			throw new Error('Request failed.');
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+		
 });
 
 function checkForUserUpdate()
@@ -154,7 +208,7 @@ function checkForUserUpdate()
 			$("#userList").empty();
 			
 			for (let userData of json) {
-				$('#userList').append('<div class="userPanel"><div class="userIcon"><i class="fas fa-user fa-3x"></i></div><div class="userInfo"><span>'+ userData.username+'</span></div>		<div class="userActions"><button class="btn ' + (userData.muted ? 'btn-danger' : 'btn-success') + ' userMic-btn" data-id="' + userData.id + '" data-muted="' + userData.muted + '"><i class="userMic-active ' + (userData.muted ? 'hidden' : '') + ' fas fa-microphone"></i><i class="userMic-inactive ' + (userData.muted ? '' : 'hidden') + ' fas fa-microphone-slash"></i></button></div></div>');
+				$('#userList').append('<div class="userPanel"><div class="userIcon"><i class="fas fa-user fa-3x"></i></div><div class="userInfo"><span>'+ userData.username+'</span></div><div class="userActions"><button class="btn ' + (userData.muted ? 'btn-danger' : 'btn-success') + ' userMic-btn" data-id="' + userData.id + '" data-muted="' + userData.muted + '"><i class="userMic-active ' + (userData.muted ? 'hidden' : '') + ' fas fa-microphone"></i><i class="userMic-inactive ' + (userData.muted ? '' : 'hidden') + ' fas fa-microphone-slash"></i></button><button class="btn ' + (userData.alive ? 'btn-success' : 'btn-danger') + ' userAlive-btn" data-id="' + userData.id + '" data-alive="' + userData.alive + '"><i class="userAlive-active ' + (userData.alive ? '' : 'hidden') + ' fas fa-heart"></i><i class="userAlive-inactive ' + (userData.alive ? 'hidden' : '') + ' fas fa-skull-crossbones"></i></button></div></div>');
 			}
 			
 		})

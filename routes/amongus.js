@@ -74,6 +74,22 @@ router.post('/unmuteUser', function(req, res, next) {
 	
 });
 
+router.post('/markAliveUser', function(req, res, next) {
+	
+	const userID = req.body.id;
+	const bot = req.app.get('bot');
+	bot.markAliveUser(userID);
+	
+});
+
+router.post('/markDeadUser', function(req, res, next) {
+	
+	const userID = req.body.id;
+	const bot = req.app.get('bot');
+	bot.markDeadUser(userID);
+	
+});
+
 router.get('/listUsers', function(req, res, next) {
 	
 	const bot = req.app.get('bot');

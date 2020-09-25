@@ -10,17 +10,24 @@ class Bot{
 		
 		this.token = process.env.TOKEN;
 		this.bot = new Discord.Client();
+		this.discordUsers = [];
 		
 		const that = this;		
-		const WebSocket = require('ws') 
-		const wss = new WebSocket.Server({ port: 6969 })
-		 
+		const WebSocket = require('ws');
+		const wss = new WebSocket.Server({ port: 6969 });		 
+				 
 		wss.on('connection', ws => {		
 		
 			//If the channel was joined/left, update user list for AmongUs		
 			that.bot.on("voiceStateUpdate", function(oldMember, newMember){
 			
 				if(oldMember.channelID == process.env.AMONGUSCHANNEL || newMember.channelID == process.env.AMONGUSCHANNEL){
+					
+					//Member has joined the channel
+					if(newMember.channelID == process.env.AMONGUSCHANNEL){
+						
+					}					
+					
 					ws.send('member_activity');		
 				}
 			
@@ -64,7 +71,6 @@ class Bot{
 	
 	joinChannel()
 	{
-		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Join Channel');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
 		
@@ -81,7 +87,6 @@ class Bot{
 	
 	leaveChannel()
 	{		
-		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Leave Channel');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
 		channel.leave();
@@ -89,31 +94,40 @@ class Bot{
 	
 	muteAllUsers()
 	{
-		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {			
 			if(!member[1].user.bot){
-				member[1].voice.setMute(true);
+				
+				for(let user of this.discordUsers){
+					if(user.uid == member[1].user.id && user.alive){						
+						member[1].voice.setMute(true);
+					}
+				}
+				
 			}
         }
 	}	
 	
 	unmuteAllUsers()
 	{
-		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {		
 			if(!member[1].user.bot){
-				member[1].voice.setMute(false);
+				
+				for(let user of this.discordUsers){
+					if(user.uid == member[1].user.id && user.alive){						
+						member[1].voice.setMute(false);
+					}
+				}
+				
 			}
         }
 	}
 	
 	muteUser(userID)
 	{
-		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Mute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {
@@ -125,7 +139,6 @@ class Bot{
 	
 	unmuteUser(userID)
 	{
-		// this.bot.channels.cache.get(process.env.BOTTEXTCHANNEL).send('Unmute All Users');
 		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {
@@ -135,20 +148,54 @@ class Bot{
         }
 	}
 	
+	markAliveUser(userID)
+	{
+		for(let user of this.discordUsers){
+			if(user.uid == userID){
+				user.alive = true;
+				this.unmuteUser(userID);
+			}
+		}
+	}	
+	
+	markDeadUser(userID)
+	{
+		for(let user of this.discordUsers){
+			if(user.uid == userID){
+				user.alive = false;
+				this.muteUser(userID);
+			}
+		}
+	}
+	
 	listUsers()
 	{
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
 		const users = [];
         for (let member of channel.members) {
 			if(!member[1].user.bot){
+				
+				var discordUser = null;
+				for(let user of this.discordUsers){
+					if(user.uid == member[1].user.id){
+						discordUser = user;
+					}
+				}
+				if(!discordUser){
+					var discordUser = {
+						'uid': member[1].user.id,
+						'alive': true
+					};
+					this.discordUsers.push(discordUser);
+				}
 				users.push({
 					"username":member[1].user.username,
 					"id":member[1].user.id,
-					"muted": member[1].voice.serverMute
+					"muted": member[1].voice.serverMute,
+					"alive": discordUser.alive
 				});
 			}
         }
-		
 		return users;
 	}	
 	

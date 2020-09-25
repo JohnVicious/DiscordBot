@@ -10,6 +10,10 @@
 			<button class="btn {{#if this.muted }} btn-danger {{else}} btn-success {{/if}} userMic-btn" data-id="{{this.id}}" data-muted="{{this.muted}}">
 				<i class="userMic-active {{#if this.muted }} hidden {{else}}  {{/if}} fas fa-microphone"></i>
 				<i class="userMic-inactive {{#if this.muted }}  {{else}} hidden {{/if}} fas fa-microphone-slash"></i>
+			</button>			
+			<button class="btn {{#if this.alive }} btn-success {{else}} btn-danger {{/if}} userAlive-btn" data-id="{{this.id}}" data-alive="{{this.alive}}">
+				<i class="userAlive-active {{#if this.alive }}  {{else}} hidden {{/if}} fas fa-heart"></i>
+				<i class="userAlive-inactive {{#if this.alive }} hidden {{else}}  {{/if}} fas fa-skull-crossbones"></i>
 			</button>
 		</div>
 	</div>

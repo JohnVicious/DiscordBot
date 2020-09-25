@@ -67,5 +67,18 @@
 }
 
 .userMic-btn {
-	width: 44px;
+	display: flex;
+	width: 35px;
+	height: 25px;
+	align-content: center;
+    justify-content: center;
+}
+
+.userAlive-btn {
+	display: flex;
+	width: 35px;
+	height: 25px;
+	margin-top: 5px;
+	align-content: center;
+    justify-content: center;
 }
