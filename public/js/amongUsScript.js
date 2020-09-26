@@ -59,6 +59,7 @@ document.getElementById('muteAll').addEventListener('click', function(e) {
 		.then(function(response) {
 			if(response.ok) {
 				console.log('Mute all');
+				checkForUserUpdate();
 				return;
 			}
 			throw new Error('Request failed.');
@@ -76,6 +77,25 @@ document.getElementById('unmuteAll').addEventListener('click', function(e) {
 		.then(function(response) {
 			if(response.ok) {
 				console.log('Unmute all');
+				checkForUserUpdate();
+				return;
+			}
+			throw new Error('Request failed.');
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+});
+
+document.getElementById('allAlive').addEventListener('click', function(e) {
+	var command = 'allAlive';
+	var fetchUrl = localSlash + 'AmongUs/' + command;
+	
+	fetch(fetchUrl, {method: 'POST'})
+		.then(function(response) {
+			if(response.ok) {
+				console.log('All alive');
+				checkForUserUpdate();
 				return;
 			}
 			throw new Error('Request failed.');
@@ -133,6 +153,7 @@ $(document).on('click', '.userMic-btn', function(){
 		.then(function(response) {
 			if(response.ok) {
 				console.log('Mute status');
+				checkForUserUpdate();
 				return;
 			}
 			throw new Error('Request failed.');
@@ -186,6 +207,7 @@ $(document).on('click', '.userAlive-btn', function(){
 		.then(function(response) {
 			if(response.ok) {
 				console.log('Alive status');
+				checkForUserUpdate();
 				return;
 			}
 			throw new Error('Request failed.');

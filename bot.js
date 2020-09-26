@@ -139,7 +139,6 @@ class Bot{
 	
 	unmuteUser(userID)
 	{
-		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
         for (let member of channel.members) {
 			if(member[1].user.id == userID){
@@ -165,6 +164,14 @@ class Bot{
 				user.alive = false;
 				this.muteUser(userID);
 			}
+		}
+	}
+	
+	allAlive()
+	{
+		for(let user of this.discordUsers){
+			user.alive = true;		
+			this.unmuteUser(user.uid);
 		}
 	}
 	

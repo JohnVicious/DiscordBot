@@ -90,6 +90,14 @@ router.post('/markDeadUser', function(req, res, next) {
 	
 });
 
+router.post('/allAlive', function(req, res, next) {
+	
+	const userID = req.body.id;
+	const bot = req.app.get('bot');
+	bot.allAlive();
+	
+});
+
 router.get('/listUsers', function(req, res, next) {
 	
 	const bot = req.app.get('bot');
