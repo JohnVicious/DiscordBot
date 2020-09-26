@@ -42,3 +42,16 @@ a {
 .mainBody {
 	margin-bottom: 60px;
 }
+
+.text-large {
+	font-size: 125%;
+}
+
+.text-larger {
+	font-size: 150%;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}

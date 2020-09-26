@@ -16,6 +16,15 @@ if(prod){
 }
 
 
+const dboptions = {
+	host: process.env.DB_HOST,
+	port: process.env.DB_PORT,
+	user: process.env.DB_USERNAME,
+	password: process.env.DB_PASSWORD,
+	database: process.env.DB_DATABASE
+};
+const connection = mysql.createConnection(dboptions);
+
 /* GET home page. */
 router.get('/', function(req, res, next) {		
 	
@@ -60,14 +69,6 @@ router.get('/register', function(req, res, next) {
 });
 
 router.post('/login', function(req,res,next) {
-	var dboptions = {
-		host: process.env.DB_HOST,
-		port: process.env.DB_PORT,
-		user: process.env.DB_USERNAME,
-		password: process.env.DB_PASSWORD,
-		database: process.env.DB_DATABASE
-	};
-	var connection = mysql.createConnection(dboptions);
 	
 	var email = req.body.email;
 	var password = req.body.password;
@@ -82,6 +83,10 @@ router.post('/login', function(req,res,next) {
 						req.session.loggedin = true;
 						req.session.email = email;
 						req.session.username = results[0].username;
+						
+						//Update last login date to now
+						connection.query('UPDATE users SET lastlogin = NOW() WHERE email = ?', [email]);					
+						
 						return res.redirect(redirectLoc);
 					}else{
 						res.send('Incorrect Email and/or Password!');	
@@ -102,10 +107,13 @@ router.post('/login', function(req,res,next) {
 });
 
 router.post('/register', function(req,res,next) {
-		// bcrypt.hash('test', saltRounds, function(err,hash){
-		// console.log(hash);
-	// });
 	
+	var username = req.body.username;
+	var email = req.body.email;
+	var password = req.body.password;
+
+	
+	return res.redirect(redirectLoc);
 });
 
 
