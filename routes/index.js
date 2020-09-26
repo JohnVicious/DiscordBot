@@ -111,9 +111,45 @@ router.post('/register', function(req,res,next) {
 	var username = req.body.username;
 	var email = req.body.email;
 	var password = req.body.password;
-
+	var errorResponse = 'Invalid register information. Please make sure to fill out the form correctly.';
 	
-	return res.redirect(redirectLoc);
+	if(username != '' && email != '' && password != ''){
+		connection.query('SELECT id, email FROM users WHERE email = ?', [email], function(error, results, fields) {
+			if (results.length == 0) {
+				//Email is not in DB, we good.
+				bcrypt.hash(password, parseInt(saltRounds), function(err, hash) {
+					connection.query('INSERT INTO users (`username`,`email`,`password`,`created`,`lastlogin`,`active`) VALUES (?,?,?,NOW(),NOW(),1)', [username, email, hash]);
+					
+					req.session.loggedin = true;
+					req.session.email = email;
+					req.session.username = username;							
+					
+					return res.redirect(redirectLoc);
+					
+				});					
+			}else{
+				res.render('register', { 
+					title: 'Register', 
+					production: assetLoc, 
+					postLocation: postLoc,
+					formResponse: errorResponse,
+					active: {
+						Register: true
+					}
+				});	
+			}
+		});
+	}else{
+		res.render('register', { 
+			title: 'Register', 
+			production: assetLoc, 
+			postLocation: postLoc,
+			formResponse: errorResponse,
+			active: {
+				Register: true
+			}
+		});
+	}
 });
 
 
