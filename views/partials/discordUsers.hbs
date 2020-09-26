@@ -1,7 +1,8 @@
 {{#each discordUsers}}
 	<div class="userPanel">
 		<div class="userIcon">
-			<i class="fas fa-user fa-3x"></i>
+			<!-- <i class="fas fa-user fa-3x"></i> -->
+			<img src="{{ this.avatarURL }}" style="max-width: 36px" />
 		</div>
 		<div class="userInfo">
 			<span>{{this.username}}</span>

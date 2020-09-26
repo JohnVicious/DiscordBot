@@ -199,7 +199,8 @@ class Bot{
 					"username":member[1].user.username,
 					"id":member[1].user.id,
 					"muted": member[1].voice.serverMute,
-					"alive": discordUser.alive
+					"alive": discordUser.alive,
+					"avatarURL": "https://cdn.discordapp.com/avatars/" + member[1].user.id + "/" + member[1].user.avatar + ".png"
 				});
 			}
         }
