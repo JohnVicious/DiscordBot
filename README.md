@@ -41,7 +41,7 @@ db-migrate up
 
 ### Running Locally
 
-Once all packages are installed, database created, and env updated, please run the following command and navigate to localhost:3000:
+Once all packages are installed, database created, and env updated, please run the following command and navigate to localhost:3000
 ```
 npm run start
 ```
@@ -49,6 +49,7 @@ npm run start
 ## Authors
 
 * **John Klein** - https://github.com/JohnVicious - https://www.johnklein.dev
+* **Eddie Muller** - https://github.com/eddimull
 
 ## License
 
