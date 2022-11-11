@@ -1,4 +1,6 @@
 require('dotenv').config();
+const FS = require('fs');
+const say = require('say');
 
 class Bot{
 	
@@ -25,8 +27,16 @@ class Bot{
 					
 					//Member has joined the channel
 					if(newMember.channelID == process.env.AMONGUSCHANNEL){
-						
-					}					
+						// console.log(newMember.member.user.username);
+						if(newMember.member.user.username !== "CasterlyBot"){
+							that.sayUserJoined(newMember.member.user.username, "joined");
+						}
+					}else{						
+						// console.log(newMember.member.user.username);
+						if(newMember.member.user.username !== "CasterlyBot"){
+							that.sayUserJoined(newMember.member.user.username, "left");
+						}
+					}			
 					
 					ws.send('member_activity');		
 				}
@@ -85,7 +95,6 @@ class Bot{
 	
 	leaveChannel()
 	{		
-		
 		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
 		channel.leave();
 	}
@@ -203,7 +212,35 @@ class Bot{
 			}
         }
 		return users;
-	}	
+	}
+	
+	sayUserJoined(username,type)
+	{
+		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+		
+		if (!FS.existsSync('./temp')){
+			FS.mkdirSync('./temp');
+		}
+		const timestamp = new Date().getTime();
+		const soundPath = `./temp/${timestamp}.wav`;
+		say.export(username + " has " + type + " the channel.", null, 1, soundPath, (err) => {
+			if (err) {
+				console.error(err);
+				return;
+			}else{
+				channel.join().then((connection) => {
+					const dispatcher = connection.play(soundPath);
+					dispatcher.on('finish', ()=>{
+						connection.disconnect();
+						FS.unlinkSync(soundPath);
+					})
+				}).catch((err) => {
+					console.error(err);
+				});
+			}
+		});
+
+	}
 	
 }
 
