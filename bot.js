@@ -26,7 +26,7 @@ class Bot{
 				const channelsWeCareAbout = [process.env.AMONGUSCHANNEL,process.env.MAINCHANNEL,process.env.CODINGCHANNEL];
 				if(channelsWeCareAbout.includes(oldMember.channelID) || channelsWeCareAbout.includes(newMember.channelID)){
 					if(!(oldMember.member.user.username === "CasterlyBot" || newMember.member.user.username === "CasterlyBot")){						
-						if (newMember.channelID === process.env.AMONGUSCHANNEL && newMember.channelID !== oldMember.channelID) {
+						if (newMember.channelID === process.env.MAINCHANNEL && newMember.channelID !== oldMember.channelID) {
 							that.sayUserJoined(newMember.member.user.username, "joined");
 						}else if(oldMember.channelID != null && newMember.channelID != null && newMember.channelID != oldMember.channelID){
 							//user switched channels
@@ -80,7 +80,7 @@ class Bot{
 	joinChannel()
 	{
 		
-		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+		const channel = this.bot.channels.cache.get(process.env.MAINCHANNEL);
 		
 		if (!channel) return console.error("The channel does not exist!");
 		channel.join().then(connection => {
@@ -95,7 +95,7 @@ class Bot{
 	
 	leaveChannel()
 	{		
-		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+		const channel = this.bot.channels.cache.get(process.env.MAINCHANNEL);
 		channel.leave();
 	}
 	
@@ -216,14 +216,19 @@ class Bot{
 	
 	sayUserJoined(username,type)
 	{
-		const channel = this.bot.channels.cache.get(process.env.AMONGUSCHANNEL);
+		const channel = this.bot.channels.cache.get(process.env.MAINCHANNEL);
 		
 		if (!FS.existsSync('./temp')){
 			FS.mkdirSync('./temp');
 		}
 		const timestamp = new Date().getTime();
-		const soundPath = `./temp/${timestamp}.wav`;
+		const soundPath = `./temp/${timestamp}.mp3`;
 		const textString = username + " has " + type + " the channel.";
+
+		let langOpt = 'en';
+		if(username == "JohnVicious"){
+			langOpt = 'en-AU';
+		}
 		
 		if(process.platform == "win32"){
 			say.export(textString, null, 1, soundPath, (err) => {
@@ -243,7 +248,7 @@ class Bot{
 			});	
 		}
 		if(process.platform == "linux"){
-			txtomp3.getMp3(textString,'en-AU').then(function(binaryStream){
+			txtomp3.getMp3(textString,langOpt).then(function(binaryStream){
 				var file = FS.createWriteStream(soundPath); // write it down the file
 				file.write(binaryStream);
 				file.end();
