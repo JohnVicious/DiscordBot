@@ -20,29 +20,41 @@ class Bot{
 		const wss = new WebSocket.Server({ port: 6969 });		 
 				 
 		wss.on('connection', ws => {		
-		
 			//If the channel was joined/left, update user list for AmongUs		
 			that.bot.on("voiceStateUpdate", (oldMember, newMember) => {
-				const channelsWeCareAbout = [process.env.AMONGUSCHANNEL,process.env.MAINCHANNEL,process.env.CODINGCHANNEL];
-				if(channelsWeCareAbout.includes(oldMember.channelID) || channelsWeCareAbout.includes(newMember.channelID)){
+				if(process.env.AMONGUSCHANNEL === oldMember.channelID || process.env.AMONGUSCHANNEL === newMember.channelID){
 					if(!(oldMember.member.user.username === "CasterlyBot" || newMember.member.user.username === "CasterlyBot")){						
-						if (newMember.channelID === process.env.MAINCHANNEL && newMember.channelID !== oldMember.channelID) {
-							that.sayUserJoined(newMember.member.user.username, "joined");
+						if (newMember.channelID === process.env.AMONGUSCHANNEL && newMember.channelID !== oldMember.channelID) {
+							ws.send('member_activity');		
 						}else if(oldMember.channelID != null && newMember.channelID != null && newMember.channelID != oldMember.channelID){
-							//user switched channels
-							that.sayUserJoined(newMember.member.user.username, "left");
+							ws.send('member_activity');		
 						}
 						if(oldMember.channelID === null || newMember.channelID === null) {
-							//user joined
-							that.sayUserJoined(newMember.member.user.username, "left");
+							ws.send('member_activity');		
 						}
-					}		
-					
-					ws.send('member_activity');		
-				}
-			
+					}					
+				}			
 			});
 		})		
+
+		//If the channel was joined/left, update user list for AmongUs		
+		this.bot.on("voiceStateUpdate", (oldMember, newMember) => {
+			const channelsWeCareAbout = [process.env.AMONGUSCHANNEL,process.env.MAINCHANNEL,process.env.CODINGCHANNEL];
+			if(channelsWeCareAbout.includes(oldMember.channelID) || channelsWeCareAbout.includes(newMember.channelID)){
+				if(!(oldMember.member.user.username === "CasterlyBot" || newMember.member.user.username === "CasterlyBot")){						
+					if (newMember.channelID === process.env.MAINCHANNEL && newMember.channelID !== oldMember.channelID) {
+						that.sayMsg(newMember.member.user.username, "joined");
+					}else if(oldMember.channelID != null && newMember.channelID != null && newMember.channelID != oldMember.channelID){
+						//user switched channels
+						that.sayMsg(newMember.member.user.username, "left");
+					}
+					if(oldMember.channelID === null || newMember.channelID === null) {
+						//user joined
+						that.sayMsg(newMember.member.user.username, "left");
+					}
+				}		
+			}
+		});
 
 		this.bot.on('ready', ()=>{
 			console.log('Bot is online');
@@ -73,6 +85,10 @@ class Bot{
 			msg.channel.send('https://www.johnklein.dev');
 		}else if(command === 'amongus' || command === 'au'){
 			msg.channel.send('https://www.johnklein.dev/DiscordBot/AmongUs');
+		}else if(command === 'vcmsg'){
+			const txtString = msg.content.slice(7).toLowerCase();
+
+			this.sayMsg(txtString, "vcmsg");
 		}
 
 	}
@@ -214,7 +230,7 @@ class Bot{
 		return users;
 	}
 	
-	sayUserJoined(username,type)
+	sayMsg(text,type)
 	{
 		const channel = this.bot.channels.cache.get(process.env.MAINCHANNEL);
 		
@@ -223,10 +239,16 @@ class Bot{
 		}
 		const timestamp = new Date().getTime();
 		const soundPath = `./temp/${timestamp}.mp3`;
-		const textString = username + " has " + type + " the channel.";
+
+		let textString = ''
+		if(type === "join" || type === "left"){
+			textString = text + " has " + type + " the channel.";
+		}else if(type === "vcmsg"){
+			textString = text;
+		}
 
 		let langOpt = 'en';
-		if(username == "JohnVicious"){
+		if(text == "JohnVicious"){
 			langOpt = 'en-AU';
 		}
 		
