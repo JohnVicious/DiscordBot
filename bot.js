@@ -1,6 +1,7 @@
 require('dotenv').config();
 const FS = require('fs');
 const say = require('say');
+var txtomp3 = require('text-to-mp3');
 
 class Bot{
 	
@@ -21,22 +22,21 @@ class Bot{
 		wss.on('connection', ws => {		
 		
 			//If the channel was joined/left, update user list for AmongUs		
-			that.bot.on("voiceStateUpdate", function(oldMember, newMember){
-			
-				if(oldMember.channelID == process.env.AMONGUSCHANNEL || newMember.channelID == process.env.AMONGUSCHANNEL){
-					
-					//Member has joined the channel
-					if(newMember.channelID == process.env.AMONGUSCHANNEL){
-						// console.log(newMember.member.user.username);
-						if(newMember.member.user.username !== "CasterlyBot"){
+			that.bot.on("voiceStateUpdate", (oldMember, newMember) => {
+				const channelsWeCareAbout = [process.env.AMONGUSCHANNEL,process.env.MAINCHANNEL,process.env.CODINGCHANNEL];
+				if(channelsWeCareAbout.includes(oldMember.channelID) || channelsWeCareAbout.includes(newMember.channelID)){
+					if(!(oldMember.member.user.username === "CasterlyBot" || newMember.member.user.username === "CasterlyBot")){						
+						if (newMember.channelID === process.env.AMONGUSCHANNEL && newMember.channelID !== oldMember.channelID) {
 							that.sayUserJoined(newMember.member.user.username, "joined");
-						}
-					}else{						
-						// console.log(newMember.member.user.username);
-						if(newMember.member.user.username !== "CasterlyBot"){
+						}else if(oldMember.channelID != null && newMember.channelID != null && newMember.channelID != oldMember.channelID){
+							//user switched channels
 							that.sayUserJoined(newMember.member.user.username, "left");
 						}
-					}			
+						if(oldMember.channelID === null || newMember.channelID === null) {
+							//user joined
+							that.sayUserJoined(newMember.member.user.username, "left");
+						}
+					}		
 					
 					ws.send('member_activity');		
 				}
@@ -223,22 +223,44 @@ class Bot{
 		}
 		const timestamp = new Date().getTime();
 		const soundPath = `./temp/${timestamp}.wav`;
-		say.export(username + " has " + type + " the channel.", null, 1, soundPath, (err) => {
-			if (err) {
-				console.error(err);
-				return;
-			}else{
+		const textString = username + " has " + type + " the channel.";
+		
+		if(process.platform == "win32"){
+			say.export(textString, null, 1, soundPath, (err) => {
+				if (err) {
+					console.error(err);
+					return;
+				}else{
+					channel.join().then((connection) => {
+						const dispatcher = connection.play(soundPath);
+						dispatcher.on('finish', ()=>{
+							FS.unlinkSync(soundPath);
+						})
+					}).catch((err) => {
+						console.error(err);
+					});
+				}
+			});	
+		}
+		if(process.platform == "linux"){
+			txtomp3.getMp3(textString,'en-AU').then(function(binaryStream){
+				var file = FS.createWriteStream(soundPath); // write it down the file
+				file.write(binaryStream);
+				file.end();
+				
 				channel.join().then((connection) => {
 					const dispatcher = connection.play(soundPath);
 					dispatcher.on('finish', ()=>{
-						connection.disconnect();
 						FS.unlinkSync(soundPath);
 					})
 				}).catch((err) => {
 					console.error(err);
 				});
-			}
-		});
+			})
+			.catch(function(err){
+				console.log("Error", err);
+			});
+		}
 
 	}
 	

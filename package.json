@@ -6,7 +6,9 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@aws-sdk/client-polly": "^3.209.0",
     "@discordjs/opus": "^0.9.0",
+    "aws-sdk": "^2.1253.0",
     "bcrypt": "^5.0.0",
     "cookie-parser": "~1.4.4",
     "db-migrate": "^0.11.11",
@@ -25,7 +27,8 @@
     "jquery": "^3.5.1",
     "morgan": "~1.9.1",
     "mysql2": "^2.2.5",
-    "say": "github:Marak/say.js#pull/106/head",
+    "say": "^0.16.0",
+    "text-to-mp3": "file:node_local/text-to-mp3",
     "ws": "^7.3.1"
   },
   "devDependencies": {
