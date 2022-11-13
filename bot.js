@@ -10,7 +10,9 @@ class Bot{
 		const Discord = require('discord.js');
 		const cmdPrefix = '!';
 		const botMsg = null;
-		
+		const usersList = require('./nicknames.json');
+
+		this.users = usersList.users;
 		this.token = process.env.TOKEN;
 		this.bot = new Discord.Client();
 		this.discordUsers = [];
@@ -18,7 +20,8 @@ class Bot{
 		const that = this;		
 		const WebSocket = require('ws');
 		const wss = new WebSocket.Server({ port: 6969 });		 
-				 
+		
+		//Website connection stuff, used for AmongUs
 		wss.on('connection', ws => {		
 			//If the channel was joined/left, update user list for AmongUs		
 			that.bot.on("voiceStateUpdate", (oldMember, newMember) => {
@@ -37,32 +40,34 @@ class Bot{
 			});
 		})		
 
-		//If the channel was joined/left, update user list for AmongUs		
-		this.bot.on("voiceStateUpdate", (oldMember, newMember) => {
-			const channelsWeCareAbout = [process.env.AMONGUSCHANNEL,process.env.MAINCHANNEL,process.env.CODINGCHANNEL];
-			if(channelsWeCareAbout.includes(oldMember.channelID) || channelsWeCareAbout.includes(newMember.channelID)){
-				if(!(oldMember.member.user.username === "CasterlyBot" || newMember.member.user.username === "CasterlyBot")){						
-					if (newMember.channelID === process.env.MAINCHANNEL && newMember.channelID !== oldMember.channelID) {
-						that.sayMsg(newMember.member.user.username, "joined");
-					}else if(oldMember.channelID != null && newMember.channelID != null && newMember.channelID != oldMember.channelID){
-						//user switched channels
-						that.sayMsg(newMember.member.user.username, "left");
-					}
-					if(oldMember.channelID === null || newMember.channelID === null) {
-						//user joined
-						that.sayMsg(newMember.member.user.username, "left");
-					}
-				}		
-			}
-		});
-
+		//Bot is ready, lets do our stuff
 		this.bot.on('ready', ()=>{
-			console.log('Bot is online');
-		});		
+			console.log('Bot is online',Date.now());
+				
+			this.bot.on("voiceStateUpdate", (oldMember, newMember) => {
+				// const channelsWeCareAbout = [process.env.AMONGUSCHANNEL,process.env.MAINCHANNEL,process.env.CODINGCHANNEL];
+				const channelsWeCareAbout = [process.env.MAINCHANNEL];
+				if(channelsWeCareAbout.includes(oldMember.channelID) || channelsWeCareAbout.includes(newMember.channelID)){
+					if(!(oldMember.member.user.username === "CasterlyBot" || newMember.member.user.username === "CasterlyBot")){		
+										
+						if (newMember.channelID === process.env.MAINCHANNEL && newMember.channelID !== oldMember.channelID) {
+							that.sayMsg(newMember.member.user.username, "joined");
+						}else if(oldMember.channelID != null && newMember.channelID != null && newMember.channelID != oldMember.channelID){
+							//user switched channels
+							that.sayMsg(newMember.member.user.username, "left");
+						}
+						if(oldMember.channelID === null || newMember.channelID === null) {
+							//user joined
+							that.sayMsg(newMember.member.user.username, "left");
+						}
+					}		
+				}
+			});
 		
-		this.bot.on('message', msg => {			
-			that.basicTextCommands(msg,cmdPrefix);
-		});
+			this.bot.on('message', msg => {			
+				that.basicTextCommands(msg,cmdPrefix);
+			});
+		});		
 
 	}
 	
@@ -233,7 +238,7 @@ class Bot{
 	sayMsg(text,type)
 	{
 		const channel = this.bot.channels.cache.get(process.env.MAINCHANNEL);
-		
+
 		if (!FS.existsSync('./temp')){
 			FS.mkdirSync('./temp');
 		}
@@ -241,16 +246,22 @@ class Bot{
 		const soundPath = `./temp/${timestamp}.mp3`;
 
 		let textString = ''
-		if(type === "join" || type === "left"){
-			textString = text + " has " + type + " the channel.";
+		if(type === "joined" || type === "left"){
+			let nickname = text;
+
+			const foundUser = this.users.find((user)=>{
+				return user.username === nickname
+			});
+			if(foundUser){
+				nickname = foundUser.nickname;
+			}
+
+			textString = nickname + " has " + type + " the channel.";
 		}else if(type === "vcmsg"){
 			textString = text;
 		}
 
-		let langOpt = 'en';
-		if(text == "JohnVicious"){
-			langOpt = 'en-AU';
-		}
+		const langOpt = 'en-AU';
 		
 		if(process.platform == "win32"){
 			say.export(textString, null, 1, soundPath, (err) => {
